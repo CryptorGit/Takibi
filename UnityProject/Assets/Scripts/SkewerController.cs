@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SkewerController : MonoBehaviour
 {
@@ -8,6 +9,12 @@ public class SkewerController : MonoBehaviour
     public List<MaterialData> materials = new();
     public int totalCookTurn;
     public int totalScore;
+
+    // --- UI表示用 ---
+    [Header("UI Reference")]
+    public Transform skewerPanel;       // 串の中身を表示する親パネル (Horizontal Layout Group)
+    public GameObject iconPrefab;       // 具材のアイコンを表示するプレハブ
+    // ----------------
 
     public bool IsEmpty => materials.Count == 0;
     public bool IsFull => materials.Count >= MaxMaterials;
@@ -26,6 +33,9 @@ public class SkewerController : MonoBehaviour
         materials.Add(mat);
         Recalculate();
         Debug.Log($"串に {mat.materialName} を追加。現在 {materials.Count}/{MaxMaterials} 個。");
+        
+        // 見た目を更新
+        RefreshSkewerView();
         return true;
     }
 
@@ -34,6 +44,49 @@ public class SkewerController : MonoBehaviour
         materials.Clear();
         totalCookTurn = 0;
         totalScore = 0;
+        
+        // 見た目を更新
+        RefreshSkewerView();
+    }
+
+    /// <summary>
+    /// 串UIを描画更新
+    /// </summary>
+    private void RefreshSkewerView()
+    {
+        if (skewerPanel == null)
+        {
+            Debug.LogWarning("SkewerController: skewerPanel が未設定です！");
+            return;
+        }
+        if (iconPrefab == null)
+        {
+            Debug.LogWarning("SkewerController: iconPrefab が未設定です！");
+            return;
+        }
+
+        // 1. 今ある表示を全消し
+        foreach (Transform child in skewerPanel)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // 2. 現在のリストの内容に合わせて生成
+        foreach (var mat in materials)
+        {
+            var go = Instantiate(iconPrefab, skewerPanel);
+            var image = go.GetComponent<Image>();
+            if (image != null && mat.icon != null)
+            {
+                image.sprite = mat.icon;
+            }
+            else
+            {
+                Debug.LogWarning($"アイコン表示失敗: image={image != null}, icon={mat.icon != null}");
+            }
+        }
+
+        Debug.Log($"串UI更新: {materials.Count}個 / 焼きT:{totalCookTurn} / スコア:{totalScore}");
     }
 
     public void Recalculate()
