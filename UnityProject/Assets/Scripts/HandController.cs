@@ -6,6 +6,7 @@ public class HandController : MonoBehaviour
     public MaterialDatabase materialDatabase;
     public int handLimit = 20;
     public int drawPerTurn = 3;
+    public int initialDraw = 5;  // 初手のドロー数
 
     // UI表示用
     public Transform handPanel;          // HandPanel の Transform
@@ -13,23 +14,49 @@ public class HandController : MonoBehaviour
 
     // 串
     public SkewerController skewerController;  // 現在の串
+    public SkewerView skewerView;              // 串のUI表示
 
     // 実際に持っている素材の一覧
     public List<MaterialData> hand = new();
 
-    // GameManager から最初に呼ぶ用
+    /// <summary>
+    /// ゲーム開始時の初期化
+    /// </summary>
     public void Init()
     {
         hand.Clear();
-        DrawMaterials(drawPerTurn);
         RefreshHandView();
     }
 
-    // 1ターン終了時に呼ぶ用
-    public void OnTurnEnded()
+    /// <summary>
+    /// 初手ドロー（5枚）
+    /// </summary>
+    public void DrawInitialHand(GameManager gameManager)
+    {
+        Debug.Log($"初手ドロー: {initialDraw}枚");
+        DrawMaterials(initialDraw);
+        CheckGameOver(gameManager);
+    }
+
+    /// <summary>
+    /// ドローフェーズ（ターン2以降のターン開始時に呼ばれる）
+    /// </summary>
+    public void DrawAndCheckGameOver(GameManager gameManager)
     {
         DrawMaterials(drawPerTurn);
-        CheckGameOver();
+        CheckGameOver(gameManager);
+    }
+
+    private void CheckGameOver(GameManager gameManager)
+    {
+        if (hand.Count > handLimit)
+        {
+            Debug.Log($"手札が上限を超えました ({hand.Count}/{handLimit})。Game Over。");
+            if (gameManager != null)
+            {
+                gameManager.TriggerGameOver();
+            }
+        }
     }
 
     private void DrawMaterials(int count)
@@ -76,14 +103,20 @@ public class HandController : MonoBehaviour
         }
     }
 
-    // 手札カードがクリックされた時
+    /// <summary>
+    /// 手札カードがクリックされた時：串に素材を追加
+    /// </summary>
     public void OnHandCardClicked(MaterialData mat)
     {
         if (skewerController == null) return;
 
-        skewerController.AddMaterial(mat);
-        hand.Remove(mat);  // 1枚消費（本当は index 指定が安全だが今は簡易で）
-        RefreshHandView();
+        // 串に追加（上限チェック込み）
+        if (skewerController.AddMaterial(mat))
+        {
+            hand.Remove(mat);
+            RefreshHandView();
+            skewerView?.Refresh();
+        }
     }
 
     // 重み付きランダム
@@ -112,14 +145,5 @@ public class HandController : MonoBehaviour
             }
         }
         return materialDatabase.materials[materialDatabase.materials.Count - 1];
-    }
-
-    private void CheckGameOver()
-    {
-        if (hand.Count > handLimit)
-        {
-            Debug.Log("手札が上限を超えました。Game Over。");
-            // 後で GameManager に通知する
-        }
     }
 }

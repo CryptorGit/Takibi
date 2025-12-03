@@ -3,17 +3,30 @@ using UnityEngine;
 
 public class SkewerController : MonoBehaviour
 {
+    public const int MaxMaterials = 4;  // 串に刺せる素材の上限
+
     public List<MaterialData> materials = new();
     public int totalCookTurn;
     public int totalScore;
 
     public bool IsEmpty => materials.Count == 0;
+    public bool IsFull => materials.Count >= MaxMaterials;
 
-    public void AddMaterial(MaterialData mat)
+    /// <summary>
+    /// 素材を串に追加する。上限4個まで。
+    /// </summary>
+    public bool AddMaterial(MaterialData mat)
     {
+        if (IsFull)
+        {
+            Debug.Log("串がいっぱいです（最大4個）");
+            return false;
+        }
+
         materials.Add(mat);
         Recalculate();
-        Debug.Log($"串に {mat.materialName} を追加。現在 {materials.Count} 個。");
+        Debug.Log($"串に {mat.materialName} を追加。現在 {materials.Count}/{MaxMaterials} 個。");
+        return true;
     }
 
     public void Clear()

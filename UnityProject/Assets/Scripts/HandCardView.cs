@@ -5,7 +5,10 @@ using TMPro;
 public class HandCardView : MonoBehaviour
 {
     public Image icon;
-    public TextMeshProUGUI label;
+    
+    [Header("ラベル（どちらか一方をアサイン）")]
+    public TextMeshProUGUI labelTMP;   // TextMeshPro の場合
+    public Text labelText;              // 通常の Text の場合
 
     private MaterialData material;
     private HandController handController;
@@ -17,8 +20,12 @@ public class HandCardView : MonoBehaviour
 
         if (icon != null && mat.icon != null)
             icon.sprite = mat.icon;
-        if (label != null)
-            label.text = mat.materialName;
+        
+        // TextMeshPro か 通常Text のどちらかにセット
+        if (labelTMP != null)
+            labelTMP.text = mat.materialName;
+        if (labelText != null)
+            labelText.text = mat.materialName;
     }
 
     // Button の OnClick から呼ぶ
