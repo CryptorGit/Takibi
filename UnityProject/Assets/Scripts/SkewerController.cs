@@ -50,6 +50,22 @@ public class SkewerController : MonoBehaviour
     }
 
     /// <summary>
+    /// 素材を串から削除する（手札に戻す時など）
+    /// </summary>
+    public bool RemoveMaterial(MaterialData mat)
+    {
+        if (materials.Contains(mat))
+        {
+            materials.Remove(mat);
+            Recalculate();
+            Debug.Log($"串から {mat.materialName} を削除。現在 {materials.Count}/{MaxMaterials} 個。");
+            // 注意: RefreshSkewerView()はここでは呼ばない（ドロップ処理で個別にDestroyするため）
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
     /// 串UIを描画更新
     /// </summary>
     private void RefreshSkewerView()
@@ -75,14 +91,25 @@ public class SkewerController : MonoBehaviour
         foreach (var mat in materials)
         {
             var go = Instantiate(iconPrefab, skewerPanel);
-            var image = go.GetComponent<Image>();
-            if (image != null && mat.icon != null)
+            
+            // SkewerCardView があれば初期化（ドラッグ対応）
+            var skewerCardView = go.GetComponent<SkewerCardView>();
+            if (skewerCardView != null)
             {
-                image.sprite = mat.icon;
+                skewerCardView.Setup(mat, this);
             }
             else
             {
-                Debug.LogWarning($"アイコン表示失敗: image={image != null}, icon={mat.icon != null}");
+                // 旧来のImage直接設定（SkewerCardViewがない場合のフォールバック）
+                var image = go.GetComponent<Image>();
+                if (image != null && mat.icon != null)
+                {
+                    image.sprite = mat.icon;
+                }
+                else
+                {
+                    Debug.LogWarning($"アイコン表示失敗: image={image != null}, icon={mat.icon != null}");
+                }
             }
         }
 

@@ -10,13 +10,12 @@ public class HandCardView : MonoBehaviour
     public TextMeshProUGUI labelTMP;   // TextMeshPro の場合
     public Text labelText;              // 通常の Text の場合
 
-    private MaterialData material;
-    private HandController handController;
+    // 外部公開用のプロパティ（ドラッグ＆ドロップで使用）
+    public MaterialData MaterialData { get; private set; }
 
-    public void Setup(MaterialData mat, HandController controller)
+    public void Setup(MaterialData mat)
     {
-        material = mat;
-        handController = controller;
+        MaterialData = mat;
 
         if (icon != null && mat.icon != null)
             icon.sprite = mat.icon;
@@ -28,9 +27,9 @@ public class HandCardView : MonoBehaviour
             labelText.text = mat.materialName;
     }
 
-    // Button の OnClick から呼ぶ
-    public void OnClick()
+    // 後方互換性のためのオーバーロード（controllerは使用しない）
+    public void Setup(MaterialData mat, HandController controller)
     {
-        handController.OnHandCardClicked(material);
+        Setup(mat);
     }
 }

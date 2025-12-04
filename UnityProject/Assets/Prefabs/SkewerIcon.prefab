@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 5296732353320216101}
   - component: {fileID: 75332853923968198}
   - component: {fileID: 1872231745234146446}
+  - component: {fileID: -1644230849642594454}
+  - component: {fileID: -1091098447660646235}
   m_Layer: 0
   m_Name: SkewerIcon
   m_TagString: Untagged
@@ -75,3 +77,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &-1644230849642594454
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5956250129271914284}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &-1091098447660646235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5956250129271914284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51971154b33a51345a9de2375cd90230, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

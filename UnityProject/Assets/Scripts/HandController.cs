@@ -89,21 +89,43 @@ public class HandController : MonoBehaviour
         }
 
         // ② 手札の中身を1枚ずつ表示
-        for (int i = 0; i < hand.Count; i++)
+        foreach (var mat in hand)
         {
-            var mat = hand[i];
             var go = GameObject.Instantiate(handCardPrefab, handPanel);
 
             var view = go.GetComponent<HandCardView>();
             if (view != null)
             {
-                view.Setup(mat, this);
+                view.Setup(mat);
             }
         }
     }
 
     /// <summary>
-    /// 手札カードがクリックされた時：串に素材を追加
+    /// ドロップ成功時に外部から呼ばれる
+    /// 指定された素材をリストから1つだけ削除する
+    /// </summary>
+    public void RemoveFromHand(MaterialData mat)
+    {
+        if (hand.Contains(mat))
+        {
+            hand.Remove(mat);
+            RefreshHandView();
+        }
+    }
+
+    /// <summary>
+    /// 串から手札に戻す時に呼ばれる
+    /// </summary>
+    public void AddToHand(MaterialData mat)
+    {
+        hand.Add(mat);
+        Debug.Log($"手札に {mat.materialName} を戻しました。現在の手札: {hand.Count}枚");
+        RefreshHandView();
+    }
+
+    /// <summary>
+    /// 手札カードがクリックされた時：串に素材を追加（後方互換性のため残す）
     /// </summary>
     public void OnHandCardClicked(MaterialData mat)
     {
