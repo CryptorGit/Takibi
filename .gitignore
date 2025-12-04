@@ -81,3 +81,9 @@ Thumbs.db
 
 # Visual Studio Code
 .vscode/
+
+# Paid assets (redistribution prohibited)
+**/MOCHIYAMA/
+
+# Packages
+*/Packages/jp.lilxyzw.liltoon/
