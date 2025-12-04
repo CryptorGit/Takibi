@@ -44,6 +44,10 @@ public class FireSlot : MonoBehaviour
         {
             gameManager.AddScore(storedScore);
         }
+        else
+        {
+            Debug.LogError("FireSlot.Provide: gameManager が null です！スコアが加算されません！");
+        }
 
         // スロットをクリア
         storedScore = 0;

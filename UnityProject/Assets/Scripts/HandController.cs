@@ -14,7 +14,6 @@ public class HandController : MonoBehaviour
 
     // 串
     public SkewerController skewerController;  // 現在の串
-    public SkewerView skewerView;              // 串のUI表示
 
     // 実際に持っている素材の一覧
     public List<MaterialData> hand = new();
@@ -115,7 +114,6 @@ public class HandController : MonoBehaviour
         {
             hand.Remove(mat);
             RefreshHandView();
-            skewerView?.Refresh();
         }
     }
 

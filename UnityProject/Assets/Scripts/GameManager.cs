@@ -75,6 +75,11 @@ public class GameManager : MonoBehaviour
         if (scoreText != null)
         {
             scoreText.text = $"Score: {currentScore}";
+            Debug.Log($"スコアUI更新: {scoreText.text}");
+        }
+        else
+        {
+            Debug.LogWarning("GameManager: scoreText が未設定です！");
         }
     }
 }

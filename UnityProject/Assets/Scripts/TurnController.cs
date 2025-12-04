@@ -5,7 +5,6 @@ public class TurnController : MonoBehaviour
     public FireSlot[] fireSlots;  // 3スロットを Inspector から登録
     public HandController handController;
     public SkewerController skewerController;
-    public SkewerView skewerView;  // 串のUI
     public GameManager gameManager;
 
     private int turnCount = 0;
@@ -39,6 +38,12 @@ public class TurnController : MonoBehaviour
     {
         turnCount++;
         Debug.Log($"=== ターン {turnCount} 開始 ===");
+
+        // gameManager の確認
+        if (gameManager == null)
+        {
+            Debug.LogError("TurnController: gameManager が未設定です！");
+        }
 
         // 1. 焼きスロットのターン進行 & 提供処理
         foreach (var slot in fireSlots)
@@ -106,8 +111,7 @@ public class TurnController : MonoBehaviour
             {
                 slot.SetFromSkewer(skewerController, gameManager);
                 Debug.Log($"串を {slot.name} に配置しました（焼きT:{skewerController.totalCookTurn} / スコア:{skewerController.totalScore}）");
-                skewerController.Clear();
-                skewerView?.Refresh();  // 串UIを空に更新
+                skewerController.Clear();  // Clear() 内で自動的にUI更新される
                 return;
             }
         }
